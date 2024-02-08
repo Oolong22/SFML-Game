@@ -24,7 +24,7 @@ int main()
 
         // define the color of the triangle's points
         triangle[0].color = sf::Color::Red;
-        triangle[1].color = sf::Color::Transparent;
+        triangle[1].color = sf::Color::Magenta;
         triangle[2].color = sf::Color::Green;
 
         // clear the window
