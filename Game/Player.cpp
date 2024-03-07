@@ -74,8 +74,8 @@ void Player::onCollision(sf::Vector2f direction)
 		//Collision on the bottom
 		if (!isJumping)
 			velocity.y = 0.0f;
-			canJump = true;
-		isJumping = false;
+		canJump = true;
+		isJumping = false; //To prevent snapping to surface
 	}
 	else if (direction.y > 0.0f) {
 		//Collision on the top
@@ -83,4 +83,4 @@ void Player::onCollision(sf::Vector2f direction)
 	}
 }
 
-//test
+//tes
