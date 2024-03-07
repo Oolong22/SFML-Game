@@ -139,7 +139,21 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Game\Animation.cpp" />
+    <ClCompile Include="Game\Collider.cpp" />
     <ClCompile Include="Game\main.cpp" />
+    <ClCompile Include="Game\Player.cpp" />
+    <ClCompile Include="Game\Platform.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Game\Animation.h" />
+    <ClInclude Include="Game\Collider.h" />
+    <ClInclude Include="Game\Constants.h" />
+    <ClInclude Include="Game\Player.h" />
+    <ClInclude Include="Game\Platform.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\..\..\..\Desktop\5328478.jpg" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
