@@ -26,6 +26,7 @@ private:
 	sf::Vector2f velocity;
 	bool canJump = true;
 	float jumpHeight;
+	bool isJumping = false;
 };
 
 //test

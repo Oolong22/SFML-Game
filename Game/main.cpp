@@ -41,7 +41,7 @@ int main()
 	std::vector<Platform> platforms;
 
 	platforms.push_back(Platform(nullptr, sf::Vector2f(50.0f, 50.0f), sf::Vector2f(2000.0f, 50.0f), sf::Color::Red));
-	platforms.push_back(Platform(nullptr, sf::Vector2f(50.0f, 50.0f), sf::Vector2f(500.0f, 300.0f), sf::Color::Blue));
+	platforms.push_back(Platform(nullptr, sf::Vector2f(50.0f, 200.0f), sf::Vector2f(500.0f, 350.0f), sf::Color::Blue));
 	platforms.push_back(Platform(nullptr, sf::Vector2f(1000.0f, 200.0f), sf::Vector2f(500.0f, 500.0f), sf::Color::Green));
 
 	float deltaTime;

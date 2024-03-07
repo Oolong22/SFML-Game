@@ -21,7 +21,7 @@ Player::~Player()
 
 void Player::update(float deltaTime)
 {
-	velocity.x *= 0.1f;
+	velocity.x = 0.0f;
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
 		velocity.x -= speed;
@@ -30,7 +30,7 @@ void Player::update(float deltaTime)
 
 	if ((sf::Keyboard::isKeyPressed(sf::Keyboard::W) || sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) && canJump) {
 		canJump = false;
-		
+		isJumping = true;
 		velocity.y = -sqrt(2.0f * GRAVITY * jumpHeight);
 	}
 
@@ -72,8 +72,10 @@ void Player::onCollision(sf::Vector2f direction)
 	}
 	if (direction.y < 0.0f) {
 		//Collision on the bottom
-		velocity.y = 0.0f;
-		canJump = true;
+		if (!isJumping)
+			velocity.y = 0.0f;
+			canJump = true;
+		isJumping = false;
 	}
 	else if (direction.y > 0.0f) {
 		//Collision on the top
