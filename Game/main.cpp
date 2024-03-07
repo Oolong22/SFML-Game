@@ -1,63 +1,95 @@
 #include <SFML/Graphics.hpp>
+#include <string>
+#include <iostream>
+#include <vector>
+#include "Player.h"
+#include "Platform.h"
 
-const int WIDTH = 800;
-const int HEIGHT = 450;
+
+static const float WIDTH = 960.0f;
+static const float HEIGHT = 540.0f;
+static const float VIEW_HEIGHT = 540.0f;
+
+void resizeView(const sf::RenderWindow& window, sf::View& view) {
+	float aspectRatio = float(window.getSize().x) / float(window.getSize().y);
+	view.setSize(VIEW_HEIGHT * aspectRatio, VIEW_HEIGHT);
+}
 
 int main()
 {
 
-    sf::ContextSettings settings;
-    settings.antialiasingLevel = 8;
-    sf::RenderWindow window(sf::VideoMode(WIDTH, HEIGHT), "cocka", sf::Style::Default, settings);
+	sf::RenderWindow window(sf::VideoMode(WIDTH, HEIGHT), "blub", sf::Style::Close | sf::Style::Resize);
+	sf::View view(sf::Vector2f(0.0f, 0.0f), sf::Vector2f(VIEW_HEIGHT, VIEW_HEIGHT));
+	sf::Vector2f middleOfScreen(WIDTH / 2, HEIGHT / 2);
+	//window.setFramerateLimit(60);
 
+	sf::Texture backgroundTexture;
+	if (!backgroundTexture.loadFromFile("Game/Assets/Sprites/tiles.jpg")) {
+		std::cout << "Failed to load backgroundTexture" << std::endl;
+	}
+	sf::Sprite background;
+	background.setTexture(backgroundTexture);
+	background.setOrigin(background.getGlobalBounds().height / 2.0f, background.getGlobalBounds().width / 2.0f);
 
-    sf::CircleShape circle1(100.f);
-    circle1.setFillColor(sf::Color::Green);
-    circle1.setOutlineColor(sf::Color::Red);
-    circle1.setOutlineThickness(5);
-    circle1.setPosition(sf::Vector2f(WIDTH/2 - 100, HEIGHT/2 - 100));
+	sf::Texture playerTexture;
+	if (!playerTexture.loadFromFile("Game/Assets/Sprites/blub.png")) {
+		std::cout << "Failed to load playerTexture" << std::endl;
+	}
 
-    sf::RectangleShape rectangle1(sf::Vector2f(100.f, 200.f));
-    rectangle1.setOrigin(50, 100);//aa
-    rectangle1.setFillColor(sf::Color::Blue);
-    rectangle1.setOutlineColor(sf::Color::Magenta);
-    rectangle1.setOutlineThickness(2);
-    rectangle1.setPosition(sf::Vector2f(200, 150));
-    rectangle1.setRotation(45.f);
+	Player player(&playerTexture, sf::Vector2u(1, 1), 0.3f, 600.0f, 200.0f);
+	
+	std::vector<Platform> platforms;
 
-    while (window.isOpen()) {
-        sf::Event event;
-        while (window.pollEvent(event))
-        {
-            if (event.type == sf::Event::Closed)
-                window.close();
-            if (event.type == sf::Event::KeyPressed)
-                window.close();
-        }
+	platforms.push_back(Platform(nullptr, sf::Vector2f(50.0f, 50.0f), sf::Vector2f(2000.0f, 50.0f), sf::Color::Red));
+	platforms.push_back(Platform(nullptr, sf::Vector2f(50.0f, 50.0f), sf::Vector2f(500.0f, 300.0f), sf::Color::Blue));
+	platforms.push_back(Platform(nullptr, sf::Vector2f(1000.0f, 200.0f), sf::Vector2f(500.0f, 500.0f), sf::Color::Green));
 
-        sf::Vertex vertex(sf::Vector2f(10.f, 50.f), sf::Color::Red, sf::Vector2f(100.f, 100.f));
+	float deltaTime;
+	sf::Clock clock;
 
-        // create an array of 3 vertices that define a triangle primitive
-        sf::VertexArray triangle(sf::Triangles, 3);
+	resizeView(window, view);
 
-        // define the position of the triangle's points
-        triangle[0].position = sf::Vector2f(250.f, 17.f);
-        triangle[1].position = sf::Vector2f(500.f, 45.f);
-        triangle[2].position = sf::Vector2f(500.f, 500.f);
+	while (window.isOpen())
+	{
+		deltaTime = clock.restart().asSeconds();
+		if (deltaTime > 1.0f / 20.0f)
+			deltaTime = 1.0f / 20.0f;
 
-        // define the color of the triangle's points
-        triangle[0].color = sf::Color::Red;
-        triangle[1].color = sf::Color::Magenta;
-        triangle[2].color = sf::Color::Green;
+		//Events:
+		sf::Event evnt;
+		while (window.pollEvent(evnt))
+		{
+			switch (evnt.type) {
+			case sf::Event::Closed:
+				window.close();
+				break;
+			case sf::Event::Resized:
+				resizeView(window, view);
+				break;
+			}
+		}
 
-        // clear the window
-        window.clear();
+		player.update(deltaTime);
 
-        window.draw(circle1);
-        window.draw(rectangle1);
-        
-        window.display();
-    }
+		Collider playerCollider = player.getCollider();
 
-    return 0;
+		sf::Vector2f direction;
+
+		for (Platform platform : platforms)
+			if (platform.getCollider().checkCollision(playerCollider, direction, 1.0f));
+				player.onCollision(direction);
+
+		view.setCenter(player.getPositon());
+
+		window.clear(sf::Color(150, 150, 150));
+		window.draw(background);
+		window.setView(view);
+		player.drawTo(window);
+		for (Platform platform : platforms)
+			platform.drawTo(window);
+		window.display();
+	}
+	
+
+	return 0;
 }
