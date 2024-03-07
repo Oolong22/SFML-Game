@@ -1,5 +1,6 @@
 #include "Player.h"
 #include "Constants.h"
+#include <iostream>
 
 Player::Player(sf::Texture* texture, sf::Vector2u imageCount, float switchTime, float speed, float jumpHeight) :
 	animation(texture, imageCount, switchTime)
@@ -34,7 +35,37 @@ void Player::update(float deltaTime)
 		velocity.y = -sqrt(2.0f * GRAVITY * jumpHeight);
 	}
 
-	velocity.y += GRAVITY * deltaTime;
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift) && canDash && isDashingAllowed && !isDashing) {
+		isDashing = true;
+		canDash = false;
+		isDashingAllowed = false;
+		dashTimer = 0.0f;
+		velocity.y = 0.0f;
+	}
+
+	if (isDashing) {
+		if (faceRight) {
+			velocity.x = dashSpeed;
+		}
+		else {
+			velocity.x = -dashSpeed;
+		}
+
+		dashTimer += deltaTime;
+		if (dashTimer >= dashDuration) {
+			isDashing = false;
+		}
+	}
+	else {
+		dashTimer += deltaTime;
+		if (dashTimer >= dashCooldown) {
+			canDash = true;
+		}
+	}
+
+	//Gravity
+	if (!isDashing)
+		velocity.y += GRAVITY * deltaTime;
 	
 	if (velocity.x == 0.0f) {
 		row = 0;
@@ -81,6 +112,11 @@ void Player::onCollision(sf::Vector2f direction)
 		//Collision on the top
 		velocity.y = 0.0f;
 	}
+}
+
+void Player::allowDash()
+{
+	isDashingAllowed = true;
 }
 
 //te
