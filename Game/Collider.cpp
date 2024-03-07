@@ -64,3 +64,5 @@ bool Collider::checkCollision(Collider& other, sf::Vector2f& direction, float pu
 
 	return false;
 }
+
+//test

@@ -80,3 +80,5 @@ void Player::onCollision(sf::Vector2f direction)
 		velocity.y = 0.0f;
 	}
 }
+
+//test
