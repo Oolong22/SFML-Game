@@ -31,25 +31,20 @@ int main()
 	}
 	sf::Sprite background;
 	background.setTexture(backgroundTexture);
-
-	// Get the local bounds (size relative to the texture)
 	sf::FloatRect localBounds = background.getLocalBounds();
-
-	// Set the origin to the center of the sprite
 	background.setOrigin(localBounds.width / 2.0f, localBounds.height / 2.0f);
-
-	// Now you can position the background at (0, 0) if you like
 	background.setPosition(0, 0);
 
 	sf::Texture playerTexture;
-	if (!playerTexture.loadFromFile("Game/Assets/Sprites/blub.png")) {
+	if (!playerTexture.loadFromFile("Game/Assets/Sprites/mushroomSpriteSheet.png")) {
 		std::cout << "Failed to load playerTexture" << std::endl;
 	}
 
-	Player player(&playerTexture, sf::Vector2u(1, 1), 0.3f, 600.0f, 200.0f);
+	Player player(&playerTexture, sf::Vector2u(5, 4), 0.3f, 600.0f, 200.0f);
 	
 	std::vector<Platform> platforms;
 
+	platforms.push_back(Platform(nullptr, sf::Vector2f(300.0f, 20.0f), sf::Vector2f(1200.0f, 150.0f), sf::Color::Red));
 	platforms.push_back(Platform(nullptr, sf::Vector2f(50.0f, 200.0f), sf::Vector2f(500.0f, 350.0f), sf::Color::Blue));
 	platforms.push_back(Platform(nullptr, sf::Vector2f(3000.0f, 200.0f), sf::Vector2f(500.0f, 500.0f), sf::Color::Green));
 
@@ -81,6 +76,13 @@ int main()
 				if (evnt.key.code == sf::Keyboard::LShift)
 					player.allowDash();
 				break;
+			case sf::Event::KeyPressed:
+				if (!player.getisDashing()) {
+					if (evnt.key.code == sf::Keyboard::A)
+						player.faceRight = false;
+					if (evnt.key.code == sf::Keyboard::D)
+						player.faceRight = true;
+				}
 			}
 
 			}
@@ -105,7 +107,7 @@ int main()
 
 		window.setView(view);
 		window.clear(sf::Color(150, 150, 150));
-		window.draw(background);
+		//window.draw(background);
 		player.drawTo(window);
 		for (Platform platform : platforms)
 			platform.drawTo(window);

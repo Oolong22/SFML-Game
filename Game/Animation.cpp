@@ -15,6 +15,10 @@ Animation::~Animation()
 {
 }
 
+void Animation::reset() {
+	currentImage.x = 0;
+}
+
 void Animation::update(int row, float deltaTime, bool faceRight)
 {
 	currentImage.y = row;

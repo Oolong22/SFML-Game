@@ -13,16 +13,18 @@ public:
 	void drawTo(sf::RenderWindow& window);
 	void onCollision(sf::Vector2f direction);
 	void allowDash();
+	bool getisDashing();
 
 	sf::Vector2f getPositon();
 	Collider getCollider() { return Collider(body); };
 
+public:
+	bool faceRight;
 private:
 	sf::RectangleShape body;
 	Animation animation;
 	unsigned int row;
 	float speed;
-	bool faceRight;
 
 	sf::Vector2f velocity;
 
@@ -37,8 +39,9 @@ private:
 	bool isDashing = false;
 	float dashTimer = 0.0f;
 	float dashCooldown = 0.6f;
-	float dashSpeed = 2500.0f;
-	float dashDuration = 0.1f;
+	float dashSpeed = 1500.0f;
+	float dashDuration = 0.3f;
+	bool inDashingAnimation = false;
 };
 
 //test

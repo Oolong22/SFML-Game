@@ -22,25 +22,27 @@ Player::~Player()
 
 void Player::update(float deltaTime)
 {
+	std::cout << isDashing << std::endl;
 	velocity.x = 0.0f;
+	if (!isDashing) {
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
+			velocity.x -= speed;
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
+			velocity.x += speed;
 
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
-		velocity.x -= speed;
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
-		velocity.x += speed;
+		if ((sf::Keyboard::isKeyPressed(sf::Keyboard::W) || sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) && canJump) {
+			canJump = false;
+			isJumping = true;
+			velocity.y = -sqrt(2.0f * GRAVITY * jumpHeight);
+		}
 
-	if ((sf::Keyboard::isKeyPressed(sf::Keyboard::W) || sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) && canJump) {
-		canJump = false;
-		isJumping = true;
-		velocity.y = -sqrt(2.0f * GRAVITY * jumpHeight);
-	}
-
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift) && canDash && isDashingAllowed && !isDashing) {
-		isDashing = true;
-		canDash = false;
-		isDashingAllowed = false;
-		dashTimer = 0.0f;
-		velocity.y = 0.0f;
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift) && canDash && isDashingAllowed && !isDashing) {
+			isDashing = true;
+			canDash = false;
+			isDashingAllowed = false;
+			dashTimer = 0.0f;
+			velocity.y = 0.0f;
+		}
 	}
 
 	if (isDashing) {
@@ -54,6 +56,7 @@ void Player::update(float deltaTime)
 		dashTimer += deltaTime;
 		if (dashTimer >= dashDuration) {
 			isDashing = false;
+			inDashingAnimation = false;
 		}
 	}
 	else {
@@ -70,13 +73,18 @@ void Player::update(float deltaTime)
 	if (velocity.x == 0.0f) {
 		row = 0;
 	}
+	else if (isDashing) {
+		if (!inDashingAnimation) {
+			inDashingAnimation = true;
+			animation.reset();
+		}
+		row = 3;
+	}
+	else if (isJumping) {
+		row = 2;
+	}
 	else {
-		row = 0;
-
-		if (velocity.x > 0.0f)
-			faceRight = true;
-		else
-			faceRight = false;
+		row = 1;
 	}
 
 	animation.update(row, deltaTime, faceRight);
@@ -117,6 +125,11 @@ void Player::onCollision(sf::Vector2f direction)
 void Player::allowDash()
 {
 	isDashingAllowed = true;
+}
+
+bool Player::getisDashing()
+{
+	return isDashing;
 }
 
 //te

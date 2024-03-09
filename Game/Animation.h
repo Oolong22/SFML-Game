@@ -8,6 +8,7 @@ public:
 	~Animation();
 
 	void update(int row, float deltaTime, bool faceRight);
+	void reset();
 
 public:
 	sf::IntRect uvRect;
