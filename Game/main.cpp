@@ -4,6 +4,8 @@
 #include <vector>
 #include "Player.h"
 #include "Platform.h"
+#include "Coin.h"
+#include <memory>
 
 
 static const float WIDTH = 1600.0f;
@@ -41,15 +43,33 @@ int main()
 	}
 
 	Player player(&playerTexture, sf::Vector2u(6, 4), 0.3f, 600.0f, 200.0f);
+
+	sf::Texture coinTexture;
+	if (!coinTexture.loadFromFile("Game/Assets/Sprites/coinAnimation.png")) {
+		std::cout << "Failed to load coinTexture" << std::endl;
+	}
+
+	std::vector<std::unique_ptr<Coin>> coins;
+	coins.push_back(std::make_unique<Coin>(&coinTexture, sf::Vector2u(6, 1), 0.75f, sf::Vector2f(1200.0f, 100.0f)));
 	
 	std::vector<Platform> platforms;
-
 	platforms.push_back(Platform(nullptr, sf::Vector2f(300.0f, 20.0f), sf::Vector2f(1200.0f, 150.0f), sf::Color::Red));
 	platforms.push_back(Platform(nullptr, sf::Vector2f(50.0f, 200.0f), sf::Vector2f(500.0f, 350.0f), sf::Color::Blue));
 	platforms.push_back(Platform(nullptr, sf::Vector2f(3000.0f, 200.0f), sf::Vector2f(500.0f, 500.0f), sf::Color::Green));
 
 	float deltaTime;
 	sf::Clock clock;
+	sf::Text nCoinsText;
+	sf::Font font;
+	if (!font.loadFromFile("Game/Assets/Fonts/Catboo.ttf")) {
+		std::cout << "Failed to load font" << std::endl;
+	}
+
+	//Text Coins
+	nCoinsText.setCharacterSize(24);
+	nCoinsText.setFont(font);
+	nCoinsText.setPosition(500.0f, 0.0f);
+	int coinsCollected = 0;
 
 	if (playerView)
 		resizeView(window, view);
@@ -78,6 +98,8 @@ int main()
 				break;
 			case sf::Event::KeyPressed:
 				if (!player.getisDashing()) {
+					if (evnt.key.code == sf::Keyboard::Escape)
+						window.close();
 					if (evnt.key.code == sf::Keyboard::A)
 						player.faceRight = false;
 					if (evnt.key.code == sf::Keyboard::D)
@@ -89,6 +111,8 @@ int main()
 		}
 
 		player.update(deltaTime);
+		for (std::unique_ptr<Coin>& coin : coins)
+			coin->update(deltaTime);
 
 		Collider playerCollider = player.getCollider();
 
@@ -97,6 +121,17 @@ int main()
 		for (Platform platform : platforms)
 			if (platform.getCollider().checkCollision(playerCollider, direction, 1.0f));
 				player.onCollision(direction);
+
+		for (auto it = coins.begin(); it != coins.end(); ++it) { // Use an iterator 
+			if ((*it)->getCollider().checkCollision(playerCollider, direction, 0.0f)) {
+				it = coins.erase(it); // Erase the coin
+				--it; // Adjust the iterator
+				std::cout << "Coin collected" << std::endl;
+				coinsCollected++;
+			}
+		}
+
+		nCoinsText.setString("Coins: " + std::to_string(coinsCollected));
 
 		if (playerView)
 			view.setCenter(player.getPositon());
@@ -109,8 +144,11 @@ int main()
 		window.clear(sf::Color(150, 150, 150));
 		//window.draw(background);
 		player.drawTo(window);
+		for (std::unique_ptr<Coin>& coin : coins)
+			coin->drawTo(window);
 		for (Platform platform : platforms)
 			platform.drawTo(window);
+		window.draw(nCoinsText);
 		window.display();
 	}
 	

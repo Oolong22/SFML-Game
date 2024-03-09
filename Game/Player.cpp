@@ -111,14 +111,14 @@ void Player::update(float deltaTime)
 	if (!isDashing)
 		velocity.y += GRAVITY * deltaTime;
 	
-	if (velocity.x == 0.0f) {
-		row = 0;
-	}
-	else if (isDashing) {
+	if (isDashing) {
 		row = 3;
 	}
 	else if (isJumping) {
 		row = 2;
+	}
+	else if (velocity.x == 0.0f) {
+		row = 0;
 	}
 	else {
 		row = 1;
@@ -126,7 +126,6 @@ void Player::update(float deltaTime)
 
 	if (row != previousRow) {
 		animation.reset();
-		std::cout << "reset" << std::endl;
 	}
 
 	animation.update(row, deltaTime, faceRight);
