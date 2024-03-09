@@ -17,6 +17,7 @@ Animation::~Animation()
 
 void Animation::reset() {
 	currentImage.x = 0;
+	totalTime = 0;
 }
 
 void Animation::update(int row, float deltaTime, bool faceRight)
@@ -44,5 +45,3 @@ void Animation::update(int row, float deltaTime, bool faceRight)
 		uvRect.width = -abs(uvRect.width);
 	}
 }
-
-//test

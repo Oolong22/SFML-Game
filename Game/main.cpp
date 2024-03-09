@@ -40,7 +40,7 @@ int main()
 		std::cout << "Failed to load playerTexture" << std::endl;
 	}
 
-	Player player(&playerTexture, sf::Vector2u(5, 4), 0.3f, 600.0f, 200.0f);
+	Player player(&playerTexture, sf::Vector2u(6, 4), 0.3f, 600.0f, 200.0f);
 	
 	std::vector<Platform> platforms;
 

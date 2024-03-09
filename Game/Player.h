@@ -9,11 +9,11 @@ public:
 	Player(sf::Texture* texture, sf::Vector2u imageCount, float switchTime, float speed, float jumpHeight);
 	~Player();
 
-	void update(float deltaTime);
 	void drawTo(sf::RenderWindow& window);
 	void onCollision(sf::Vector2f direction);
 	void allowDash();
 	bool getisDashing();
+	void update(float deltaTime);
 
 	sf::Vector2f getPositon();
 	Collider getCollider() { return Collider(body); };
@@ -42,6 +42,7 @@ private:
 	float dashSpeed = 1500.0f;
 	float dashDuration = 0.3f;
 	bool inDashingAnimation = false;
+	int previousRow = 0;
 };
 
 //test

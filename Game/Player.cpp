@@ -2,8 +2,8 @@
 #include "Constants.h"
 #include <iostream>
 
-Player::Player(sf::Texture* texture, sf::Vector2u imageCount, float switchTime, float speed, float jumpHeight) :
-	animation(texture, imageCount, switchTime)
+Player::Player(sf::Texture* texture, sf::Vector2u imageCount, float animationTime, float speed, float jumpHeight) :
+	animation(texture, imageCount, animationTime / imageCount.x) //Divide by imageCount.x to get the time for each frame
 {
 	this->speed = speed;
 	this->jumpHeight = jumpHeight;
@@ -20,9 +20,50 @@ Player::~Player()
 {
 }
 
+
+
+void Player::drawTo(sf::RenderWindow& window)
+{
+	window.draw(body);
+}
+
+void Player::onCollision(sf::Vector2f direction)
+{
+	if (direction.x < 0.0f) {
+		//Collision on the left
+		velocity.x = 0.0f;
+	}
+	else if (direction.x > 0.0f) {
+		//Collision on the right
+		velocity.x = 0.0f;
+	}
+	if (direction.y < 0.0f) {
+		//Collision on the bottom
+		if (!isJumping)
+			velocity.y = 0.0f;
+		canJump = true;
+		isJumping = false; //To prevent snapping to surface
+	}
+	else if (direction.y > 0.0f) {
+		//Collision on the top
+		velocity.y = 0.0f;
+	}
+}
+
+void Player::allowDash()
+{
+	isDashingAllowed = true;
+}
+
+bool Player::getisDashing()
+{
+	return isDashing;
+}
+
+sf::Vector2f Player::getPositon() { return body.getPosition(); }
+
 void Player::update(float deltaTime)
 {
-	std::cout << isDashing << std::endl;
 	velocity.x = 0.0f;
 	if (!isDashing) {
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
@@ -74,10 +115,6 @@ void Player::update(float deltaTime)
 		row = 0;
 	}
 	else if (isDashing) {
-		if (!inDashingAnimation) {
-			inDashingAnimation = true;
-			animation.reset();
-		}
 		row = 3;
 	}
 	else if (isJumping) {
@@ -87,49 +124,13 @@ void Player::update(float deltaTime)
 		row = 1;
 	}
 
+	if (row != previousRow) {
+		animation.reset();
+		std::cout << "reset" << std::endl;
+	}
+
 	animation.update(row, deltaTime, faceRight);
+	previousRow = row;
 	body.setTextureRect(animation.uvRect);
 	body.move(velocity * deltaTime);
 }
-
-sf::Vector2f Player::getPositon() { return body.getPosition(); }
-
-void Player::drawTo(sf::RenderWindow& window)
-{
-	window.draw(body);
-}
-
-void Player::onCollision(sf::Vector2f direction)
-{
-	if (direction.x < 0.0f) {
-		//Collision on the left
-		velocity.x = 0.0f;
-	}
-	else if (direction.x > 0.0f) {
-		//Collision on the right
-		velocity.x = 0.0f;
-	}
-	if (direction.y < 0.0f) {
-		//Collision on the bottom
-		if (!isJumping)
-			velocity.y = 0.0f;
-		canJump = true;
-		isJumping = false; //To prevent snapping to surface
-	}
-	else if (direction.y > 0.0f) {
-		//Collision on the top
-		velocity.y = 0.0f;
-	}
-}
-
-void Player::allowDash()
-{
-	isDashingAllowed = true;
-}
-
-bool Player::getisDashing()
-{
-	return isDashing;
-}
-
-//te
