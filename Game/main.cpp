@@ -50,8 +50,13 @@ int main()
 	}
 
 	std::vector<std::unique_ptr<Coin>> coins;
-	coins.push_back(std::make_unique<Coin>(&coinTexture, sf::Vector2u(6, 1), 0.75f, sf::Vector2f(1200.0f, 100.0f)));
-	
+	coins.push_back(std::make_unique<Coin>(&coinTexture, sf::Vector2u(6, 1), 0.75f, sf::Vector2f(1200.0f, 350.0f)));
+	coins.push_back(std::make_unique<Coin>(&coinTexture, sf::Vector2u(6, 1), 0.60f, sf::Vector2f(1250.0f, 350.0f)));
+	coins.push_back(std::make_unique<Coin>(&coinTexture, sf::Vector2u(6, 1), 0.50f, sf::Vector2f(1300.0f, 350.0f)));
+	coins.push_back(std::make_unique<Coin>(&coinTexture, sf::Vector2u(6, 1), 0.75f, sf::Vector2f(1350.0f, 350.0f)));
+	coins.push_back(std::make_unique<Coin>(&coinTexture, sf::Vector2u(6, 1), 0.75f, sf::Vector2f(1400.0f, 350.0f)));
+	coins.push_back(std::make_unique<Coin>(&coinTexture, sf::Vector2u(6, 1), 0.75f, sf::Vector2f(1450.0f, 350.0f)));
+
 	std::vector<Platform> platforms;
 	platforms.push_back(Platform(nullptr, sf::Vector2f(300.0f, 20.0f), sf::Vector2f(1200.0f, 150.0f), sf::Color::Red));
 	platforms.push_back(Platform(nullptr, sf::Vector2f(50.0f, 200.0f), sf::Vector2f(500.0f, 350.0f), sf::Color::Blue));
@@ -122,12 +127,19 @@ int main()
 			if (platform.getCollider().checkCollision(playerCollider, direction, 1.0f));
 				player.onCollision(direction);
 
-		for (auto it = coins.begin(); it != coins.end(); ++it) { // Use an iterator 
+		for (auto it = coins.begin(); it != coins.end(); ) {
 			if ((*it)->getCollider().checkCollision(playerCollider, direction, 0.0f)) {
-				it = coins.erase(it); // Erase the coin
-				--it; // Adjust the iterator
-				std::cout << "Coin collected" << std::endl;
+				if (it == coins.begin()) {
+					it = coins.erase(it);
+				}
+				else {
+					it = coins.erase(it);
+					--it;
+				}
 				coinsCollected++;
+			}
+			else {
+				++it;
 			}
 		}
 
