@@ -12,7 +12,7 @@ Player::Player(sf::Texture* texture, sf::Vector2u imageCount, float animationTim
 
 	body.setSize(sf::Vector2f(64.0f, 64.0f));
 	body.setOrigin(body.getSize() / 2.0f);
-	body.setPosition(200.0f, 0.0f);
+	body.setPosition(0.0f, -32.0f);
 	body.setTexture(texture);
 }
 

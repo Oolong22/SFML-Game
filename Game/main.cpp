@@ -50,17 +50,18 @@ int main()
 	}
 
 	std::vector<std::unique_ptr<Coin>> coins;
-	coins.push_back(std::make_unique<Coin>(&coinTexture, sf::Vector2u(6, 1), 0.75f, sf::Vector2f(1200.0f, 350.0f)));
-	coins.push_back(std::make_unique<Coin>(&coinTexture, sf::Vector2u(6, 1), 0.75f, sf::Vector2f(1250.0f, 350.0f)));
-	coins.push_back(std::make_unique<Coin>(&coinTexture, sf::Vector2u(6, 1), 0.75f, sf::Vector2f(1300.0f, 350.0f)));
-	coins.push_back(std::make_unique<Coin>(&coinTexture, sf::Vector2u(6, 1), 0.75f, sf::Vector2f(1350.0f, 350.0f)));
-	coins.push_back(std::make_unique<Coin>(&coinTexture, sf::Vector2u(6, 1), 0.75f, sf::Vector2f(1400.0f, 350.0f)));
-	coins.push_back(std::make_unique<Coin>(&coinTexture, sf::Vector2u(6, 1), 0.75f, sf::Vector2f(1450.0f, 350.0f)));
+	coins.push_back(std::make_unique<Coin>(&coinTexture, sf::Vector2u(6, 1), 0.75f, sf::Vector2f(1050.0f, -250.0f)));
+	coins.push_back(std::make_unique<Coin>(&coinTexture, sf::Vector2u(6, 1), 0.75f, sf::Vector2f(1100.0f, -250.0f)));
+	coins.push_back(std::make_unique<Coin>(&coinTexture, sf::Vector2u(6, 1), 0.75f, sf::Vector2f(1150.0f, -250.0f)));
+	coins.push_back(std::make_unique<Coin>(&coinTexture, sf::Vector2u(6, 1), 0.75f, sf::Vector2f(1200.0f, -250.0f)));
+	coins.push_back(std::make_unique<Coin>(&coinTexture, sf::Vector2u(6, 1), 0.75f, sf::Vector2f(1250.0f, -250.0f)));
+	coins.push_back(std::make_unique<Coin>(&coinTexture, sf::Vector2u(6, 1), 0.75f, sf::Vector2f(1300.0f, -250.0f)));
 
 	std::vector<Platform> platforms;
-	platforms.push_back(Platform(nullptr, sf::Vector2f(300.0f, 20.0f), sf::Vector2f(1200.0f, 150.0f), sf::Color::Red));
-	platforms.push_back(Platform(nullptr, sf::Vector2f(50.0f, 200.0f), sf::Vector2f(500.0f, 350.0f), sf::Color::Blue));
-	platforms.push_back(Platform(nullptr, sf::Vector2f(3000.0f, 200.0f), sf::Vector2f(500.0f, 500.0f), sf::Color::Green));
+	platforms.push_back(Platform(nullptr, sf::Vector2f(20.0f, 20.0f), sf::Vector2f(0.0f, 0.0f), sf::Color::Red));
+	platforms.push_back(Platform(nullptr, sf::Vector2f(300.0f, 20.0f), sf::Vector2f(1200.0f, -200.0f), sf::Color::Red));
+	platforms.push_back(Platform(nullptr, sf::Vector2f(50.0f, 200.0f), sf::Vector2f(500.0f, -50.0f), sf::Color::Blue));
+	platforms.push_back(Platform(nullptr, sf::Vector2f(3000.0f, 200.0f), sf::Vector2f(0.0f, 150.0f), sf::Color::Green));
 
 	float deltaTime;
 	sf::Clock clock;
@@ -73,7 +74,7 @@ int main()
 	//Text Coins
 	nCoinsText.setCharacterSize(24);
 	nCoinsText.setFont(font);
-	nCoinsText.setPosition(500.0f, 0.0f);
+	nCoinsText.setPosition(0.0f, -100.0f);
 	int coinsCollected = 0;
 
 	if (playerView)
@@ -155,12 +156,12 @@ int main()
 		window.setView(view);
 		window.clear(sf::Color(150, 150, 150));
 		//window.draw(background);
-		player.drawTo(window);
 		for (std::unique_ptr<Coin>& coin : coins)
 			coin->drawTo(window);
 		for (Platform platform : platforms)
 			platform.drawTo(window);
 		window.draw(nCoinsText);
+		player.drawTo(window);
 		window.display();
 	}
 
