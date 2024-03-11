@@ -51,8 +51,8 @@ int main()
 
 	std::vector<std::unique_ptr<Coin>> coins;
 	coins.push_back(std::make_unique<Coin>(&coinTexture, sf::Vector2u(6, 1), 0.75f, sf::Vector2f(1200.0f, 350.0f)));
-	coins.push_back(std::make_unique<Coin>(&coinTexture, sf::Vector2u(6, 1), 0.60f, sf::Vector2f(1250.0f, 350.0f)));
-	coins.push_back(std::make_unique<Coin>(&coinTexture, sf::Vector2u(6, 1), 0.50f, sf::Vector2f(1300.0f, 350.0f)));
+	coins.push_back(std::make_unique<Coin>(&coinTexture, sf::Vector2u(6, 1), 0.75f, sf::Vector2f(1250.0f, 350.0f)));
+	coins.push_back(std::make_unique<Coin>(&coinTexture, sf::Vector2u(6, 1), 0.75f, sf::Vector2f(1300.0f, 350.0f)));
 	coins.push_back(std::make_unique<Coin>(&coinTexture, sf::Vector2u(6, 1), 0.75f, sf::Vector2f(1350.0f, 350.0f)));
 	coins.push_back(std::make_unique<Coin>(&coinTexture, sf::Vector2u(6, 1), 0.75f, sf::Vector2f(1400.0f, 350.0f)));
 	coins.push_back(std::make_unique<Coin>(&coinTexture, sf::Vector2u(6, 1), 0.75f, sf::Vector2f(1450.0f, 350.0f)));
@@ -163,7 +163,7 @@ int main()
 		window.draw(nCoinsText);
 		window.display();
 	}
-	
+
 
 	return 0;
 }
